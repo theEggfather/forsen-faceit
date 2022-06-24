@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Forsen Faceit Dash</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      $(function() {
+        (function poll() {
+        setTimeout(function () {
+          $.ajax({
+            url: "{{url_for('send_stat')}}",
+            type: "GET",
+            success: function (data) {
+              if (data.match_id != "{{match.match_id}}") {
+                location.reload();
+              }
+
+              $("#ft_s").text(data.ft_s);
+              $("#ot_s").text(data.ot_s)
+
+            },
+            dataType: "json",
+            complete: poll,
+            timeout: 2000
+          })
+        }, 5000);
+      })();
+
+      $("#copy_forsen_stat").click( function () {
+        navigator.clipboard.writeText($("#forsen_spam").text());
+      });
+
+      $("#copy_team_comp").click( function () {
+        navigator.clipboard.writeText($("#team_comp_spam").text());
+      });
+
+      $("#copy_match_stat").click( function () {
+        navigator.clipboard.writeText($("#match_stat_spam").text());
+      });
+
+      $("#copy_map_stat").click( function () {
+        navigator.clipboard.writeText($("#map_stat_spam").text());
+      });
+
+      $("#copy_offline").click( function () {
+        navigator.clipboard.writeText($("#offline_spam").text());
+      });
+
+
+      });
+    </script>
+  </head>
+  <body class="bg-dark">
+    <div class="container pt-3 text-light">
+      <h2> <a href="{{url_for('gamba')}}">Click here to go to the predictions site.</a></h2>
+      <h1>Forsen's team:</h1>
+      <div class="row">
+        {% for member in match.forsens_team.players%}
+        <div class="col-sm">
+          <div class="card bg-secondary text-center">
+            <img class="card-img-top img-fluid" src={{member.player_avatar_url if (member.player_avatar_url != "") else (url_for('static', filename='forsenE.png') if (member.player_id == "ea1864f6-5748-41e1-a084-1e5c0044322d") else url_for('static', filename='Okayeg.png'))}} alt="Card image">
+            <h4 class="card-title text-dark">{{member.nickname}}</h4>
+            <h5 class="card-text text-dark">LVL {{member.level}} | ELO {{member.elo}}</h5>
+            <img
+                src={{"https://flagcdn.com/h120/" + member.country + ".png"}}
+                height="40" width="120" class="mx-auto" title="{{country_table[member.country]}}">
+            <a href={{"https://www.faceit.com/en/players/" + member.nickname}} class="btn btn-secondary">See Faceit Profile</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <h1>Opposing team:</h1>
+      <div class="row">
+        {% for member in match.other_team.players%}
+        <div class="col-sm">
+          <div class="card bg-secondary text-center">
+            <img class="card-img-top img-fluid" src={{member.player_avatar_url if (member.player_avatar_url != "") else url_for('static', filename='Okayeg.png')}} alt="Card image">
+            <h4 class="card-title text-dark">{{member.nickname}}</h4>
+            <h5 class="card-text text-dark">LVL {{member.level}} | ELO {{member.elo}}</h5>
+            <img
+                src={{"https://flagcdn.com/h120/" + member.country + ".png"}}
+                height="40" width="120" class="mx-auto" title="{{country_table[member.country]}}">
+            <a href={{"https://www.faceit.com/en/players/" + member.nickname}} class="btn btn-secondary">See Faceit Profile</a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div><h4 class="text-info">Note:</h4><h4><img src={{url_for('static', filename='forsenE.png')}} height=40> and <img src={{url_for('static', filename='Okayeg.png')}} height=40> are placeholders for accounts with no profile picture. </h4></div>
+      <div class="row">
+        <div class="col">
+          
+          <h3>Match Statistics:</h3>
+          <table class="table table-bordered text-light text-center">
+            <thead>
+              <tr>
+                <th>Stats</th>
+                <th>Forsen's Team</th>
+                <th>Opposing Team</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>Win Percentage</th>
+                <td>{{ft_wp + "%"}}</td>
+                <td>{{ot_wp + "%"}}</td>
+              </tr>
+              <tr>
+                <th>Average Skill Level</th>
+                <td>{{match.forsens_team.level}}</td>
+                <td>{{match.other_team.level}}</td>
+              </tr>
+              <tr>
+                <th>Average ELO</th>
+                <td>{{match.forsens_team.avg_elo}}</td>
+                <td>{{match.other_team.avg_elo}}</td>
+              </tr>
+              <tr>
+                <th>Estimated ELO Won/Lost If Team Wins</th>
+                <td>{{match.forsens_team.eloChangeOnWin}}</td>
+                <td>{{match.other_team.eloChangeOnWin}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="col">
+          <h3>Match Info:</h3>
+          <div class="row text-center">
+            <div class="col">
+              <h4>Map: {{match.map_name}} <img src={{match.map_url}} alt={{match.map_name + "image"}}></h4>
+              <h4>Status: {{match.status}}</h4>
+              <h4>Map Stats:</h4>
+              <h4>Forsen played {{match.map_name}} {{map_stats["played"]}} times.</h4>
+              <h4>Win Rate: {{map_stats["win_rate"]}}% K/D Ratio: {{map_stats["K/D"]}}</h4>
+            </div>
+            <div class="col">
+              <table class="table table-bordered text-light text-center">
+                <thead>
+                  <tr>
+                    <th>
+                      <h4>Forsen's Team</h4>
+                    </th>
+                    <th>
+                      <h4>Opposing Team</h4>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th>
+                      <h4 id="ft_s">{{match.forsens_team.score}}</h4>
+                    </th>
+                    <th>
+                      <h4 id="ot_s">{{match.other_team.score}}</h4>
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h4>Info Pastas:</h4>
+
+      <div id="accordion">
+
+        <div class="card">
+          <div class="card-header bg-secondary">
+            <a class="card-link text-dark" data-toggle="collapse" href="#collapseOne">
+              Forsen's Current Stats
+            </a>
+          </div>
+          <div id="collapseOne" class="collapse show" data-parent="#accordion">
+            <div class="card-body bg-dark">
+              <button class="button button-dark bg-secondary text-light" id="copy_forsen_stat">Copy Spam</button><p id="forsen_spam">{{forsen_stat_spam}}</p> 
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header bg-secondary">
+            <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseTwo">
+              Forsen's Team Composition
+            </a>
+          </div>
+          <div id="collapseTwo" class="collapse" data-parent="#accordion">
+            <div class="card-body bg-dark">
+              <button class="button button-dark bg-secondary text-light" id="copy_team_comp">Copy Spam</button><p id="team_comp_spam">{{team_comp_spam}}</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header bg-secondary">
+            <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseThree">
+              Match Statistics
+            </a>
+          </div>
+          <div id="collapseThree" class="collapse" data-parent="#accordion">
+            <div class="card-body bg-dark">
+              <button class="button button-dark bg-secondary text-light" id="copy_match_stat">Copy Spam</button><p id="match_stat_spam">{{match_stat_spam}}</p>
+            </div>
+          </div>
+        </div>
+      
+        <div class="card">
+          <div class="card-header bg-secondary">
+            <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseFour">
+              Map Statistics
+            </a>
+          </div>
+          <div id="collapseFour" class="collapse" data-parent="#accordion">
+            <div class="card-body bg-dark">
+              <button class="button button-dark bg-secondary text-light" id="copy_map_stat">Copy Spam</button><p id="map_stat_spam">{{map_stat_spam}}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header bg-secondary">
+            <a class="collapsed card-link text-dark" data-toggle="collapse" href="#collapseFive">
+              Offline CS Match Spam
+            </a>
+          </div>
+          <div id="collapseFive" class="collapse" data-parent="#accordion">
+            <div class="card-body bg-dark">
+              <button class="button button-dark bg-secondary text-light" id="copy_offline">Copy Spam</button><p id="offline_spam">/me forsenScoots FORSEN IS PLAYING CSGO forsenScoots {{match.map_name}} forsenScoots {{match.forsens_team.score}}-{{match.other_team.score}} forsenScoots </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <h5>Made by TheEggfather.</h5>
+    </div>
+  </body>
+</html>
