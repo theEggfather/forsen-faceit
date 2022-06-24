@@ -1,5 +1,6 @@
 # forsen-faceit
 A website that tracks the current Faceit CSGO match of the twitch streamer Forsen.
+https://forsen-faceit.fly.dev/
 
 The site is written in python using flask and related modules. Reasons for python are :
 1) this evolved from a script (forsan.py) I used to prepare my stat spams
