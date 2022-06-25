@@ -310,6 +310,7 @@
       </table>
       <button type="submit" class="btn btn-dark bg-secondary" id="predict">Confirm Prediction (Predictions are open in rounds 2-5, and you can put points in both teams if you want.)</button>
     </form>
+    {% endif %}
     <table class="table table-bordered text-light text-center">
       <thead>
         <tr>
@@ -348,7 +349,6 @@
         </tr>
       </tbody>
     </table>
-    {% endif %}
     <div class="text-left">
     <h4>Made by theEggfather.</h4>
     <p>On password security: Passwords are hashed client side (using sha256, you can check the js code yourself 
