@@ -1,7 +1,7 @@
 FROM ubuntu
 RUN apt-get update && apt-get install -y bash curl python3.6 pip
 RUN pip install --upgrade pip
-RUN pip install flask gunicorn requests datetime flask-login psycopg[binary] bcrypt
+RUN pip install flask gunicorn requests datetime psycopg[binary]
 
 RUN mkdir /app/
 RUN mkdir /app/static/
