@@ -40,7 +40,13 @@
         $("#login").prop('disabled', true);
         const re = /^(?=.{4,20}$)(?!.*[_.]{2})[a-zA-Z0-9._]+$/;
         const username = $("#username").val()
-        const pass_hash = await digestMessage($("#pwd").val())
+        const pass = $("#pwd").val();
+        if (pass.length < 6) {
+          alert("Password must be longer than 5 characters.");
+        }
+
+
+        const pass_hash = await digestMessage(pass);
         if (re.test(username)) {
           $.ajax({
             type: "POST",
@@ -310,6 +316,7 @@
       </table>
       <button type="submit" class="btn btn-dark bg-secondary" id="predict">Confirm Prediction (Predictions are open in rounds 2-5, and you can put points in both teams if you want.)</button>
     </form>
+    {% endif %}
     <table class="table table-bordered text-light text-center">
       <thead>
         <tr>
@@ -348,7 +355,6 @@
         </tr>
       </tbody>
     </table>
-    {% endif %}
     <div class="text-left">
     <h4>Made by theEggfather.</h4>
     <p>On password security: Passwords are hashed client side (using sha256, you can check the js code yourself 
