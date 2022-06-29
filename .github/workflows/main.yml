@@ -13,4 +13,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: sudo flyctl deploy --remote-only --strategy immediate
+      - uses: docker-practice/actions-setup-docker@master
+      - run: |
+          set -x
+
+          docker version
+
+          docker run --rm hello-world
+      - run: flyctl deploy --strategy immediate
