@@ -1,5 +1,4 @@
 FROM ubuntu
-RUN apt-get install sudo
 RUN apt-get update
 RUN apt-get install -y bash curl python3.6 pip
 RUN pip install --upgrade pip
