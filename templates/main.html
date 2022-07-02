@@ -64,7 +64,7 @@
       let finishMin = "0" + finishDate.getMinutes();
       let finishSec = "0" + finishDate.getSeconds();
       let finishYear = finishDate.getFullYear();
-      let finishMonth = finishDate.getMonth();
+      let finishMonth = finishDate.getMonth() + 1;
       let finishDay = finishDate.getDate();
 
       let HMS = finishHour + ":" + finishMin.substr(-2) + ":" + finishSec.substr(-2);
