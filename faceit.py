@@ -42,7 +42,7 @@ class match:
 
         if _response["status"] == "FINISHED":
             self.finished = True
-            self.finish_time = datetime.fromtimestamp(_response["finished_at"]) - timedelta(hours = 3) + timedelta(hours= time_zone)
+            self.finish_time = _response["finished_at"]
             match_stats = _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}/stats', headers=headers)
             if _response.status_code != 200: 
                 raise Exception(f"Bad match_id/stats response, code {match_stats.status_code}")
