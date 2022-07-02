@@ -56,6 +56,39 @@
         navigator.clipboard.writeText($("#offline_spam").text());
       });
 
+      {% if match.finished %}
+
+      var matchFin = {{ match.finish_time }};
+      let finishDate = new Date(matchFin * 1000);
+      let finishHour = finishDate.getHours();
+      let finishMin = "0" + finishDate.getMinutes();
+      let finishSec = "0" + finishDate.getSeconds();
+      let finishYear = finishDate.getFullYear();
+      let finishMonth = finishDate.getMonth();
+      let finishDay = finishDate.getDate();
+
+      let HMS = finishHour + ":" + finishMin.substr(-2) + ":" + finishSec.substr(-2);
+      let date = finishDay + "/" + finishMonth+ "/" + finishYear;
+
+      $("#finishDate").text(HMS + " " + date);
+
+      (function last_played() {
+        setInterval(function () {
+          
+          let unplayedMs = Date.now() - (matchFin * 1000);
+          let days = Math.floor(unplayedMs / (1000 * 24 * 60 * 60));
+          let hours = Math.floor(unplayedMs % (1000 * 24 * 60 * 60) / (1000 * 60 * 60));
+          let mins = Math.floor(unplayedMs % (1000 * 60 * 60) / (1000 * 60));
+          let secs = Math.floor(unplayedMs % (1000 * 60) / (1000));
+          $("#elapsed").text(days + " days " + hours + " hours " + mins + " minutes " + secs + " seconds")
+          
+        }, 500);
+      })();
+
+      
+
+      {% endif %}
+
 
       });
     </script>
@@ -165,6 +198,12 @@
                   </tr>
                 </tbody>
               </table>
+              {% if match.finished %}
+              <h4>Finished at:</h4>
+              <h5 id="finishDate"></h5>
+              <h4>Elapsed:</h4>
+              <h5 id="elapsed"></h5>
+              {% endif %}
             </div>
           </div>
         </div>
