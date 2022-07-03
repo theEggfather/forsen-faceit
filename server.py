@@ -34,7 +34,8 @@ def mainView():
     match=current_match, ft_wp = str(forsens_team_wp), ot_wp = str(100 - forsens_team_wp),
     forsen_stat_spam = playerStat(), team_comp_spam = teamComposition(current_match),
     match_stat_spam = matchStats(current_match), map_stat_spam = mapStats(current_match), 
-    map_stats = forsen.get_map_stats(current_match.map), country_table = country_codes)
+    map_stats = forsen.get_map_stats(current_match.map), country_table = country_codes,
+    forsen = forsen, progress = forsen.get_level_progress())
 
 @app.route("/faceit_webhook", methods = ["POST"])
 def faceit_webhook():

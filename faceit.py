@@ -194,5 +194,12 @@ class player:
         else:
             return {"map":map, "played":0,"win_rate":0,"K/D":0}
 
+    def get_level_progress(self):
+        lvltable = [0,0,800,950,1100,1250,1400,1550,1700,1850,2000]
+        level_diff = lvltable[self.level + 1] - lvltable[self.level]
+        level_progress = self.elo - lvltable[self.level]
+        level_perc = round(100 * (level_progress / level_diff), 2)
+        return (level_perc, lvltable[self.level], lvltable[self.level + 1])
+
 
     

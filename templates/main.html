@@ -95,6 +95,22 @@
   </head>
   <body class="bg-dark">
     <div class="container pt-3 text-light">
+      <h1>Forsen's Stats:</h1>
+      <div class="card bg-secondary text-center w-25 h-25 mx-auto">
+        <img class="card-img-top img-fluid" src={{forsen.player_avatar_url if (forsen.player_avatar_url != "") else url_for('static', filename='forsenE.png')}} alt="Card image">
+        <h4 class="card-title text-dark">{{forsen.nickname}}</h4>
+        <h5 class="card-text text-dark">LVL {{forsen.level}} | ELO {{forsen.elo}}</h5>
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" aria-valuenow="{{progress[0]}}"
+          aria-valuemin="0" aria-valuemax="100" style="width:{{progress[0]}}%">
+            {{progress[0]}}% | {{progress[2] - forsen.elo}} to level up | {{forsen.elo - progress[1]}} to level down
+          </div>
+        </div>
+        <img
+                src={{"https://flagcdn.com/h120/" + forsen.country + ".png"}}
+                height="40" width="120" class="mx-auto" title="{{country_table[forsen.country]}}">
+            <a href={{"https://www.faceit.com/en/players/" + forsen.nickname}} class="btn btn-secondary">See Faceit Profile</a>
+      </div>
       <h1>Forsen's team:</h1>
       <div class="row">
         {% for member in match.forsens_team.players%}
