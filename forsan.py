@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import math
 import faceit
 from datetime import datetime
 
@@ -34,8 +35,29 @@ def playerStat(player = forsen):
             rank = ranks[i]
             rank_i = i
     
-    out = f"/me —— forsenE STATS —— forsenE is forsenLevel LVL {player.level}, {rank} rank with {player.elo} ELO | forsen needs {lvltable[player.level + 1] - player.elo} elo to level up forsenLevel | forsen needs {ranktable[rank_i + 1] - player.elo + 1} elo to rank up to {ranks[rank_i + 1]} | "
+    progress = forsen.get_level_progress();
+
+    out = f"/me —— forsenE STATS —— forsenE is forsenLevel LVL {player.level}, {rank} rank with {player.elo} ELO | ⠀  forsenE needs {lvltable[player.level + 1] - player.elo} elo to level up! forsenLevel TeaTime {makeBar(progress[0])} {progress[0]}%"
     return out + "\n"
+
+def makeBar(p):
+    #adapted from https://github.com/Changaco/unicode-progress-bars/blob/master/generator.html
+    size = 28
+    style = '░▒▓█'
+    full_sym = style[-1]
+    n = len(style) -1
+    if p == 100:
+        return full_sym * size
+    p /= 100.0
+    x = p * size
+    full = math.floor(x)
+    rest = x - full
+    middle = math.floor(rest * n)
+    if p != 0 and full == 0 and middle == 0:
+        middle = 1
+    m = "" if full == size else style[middle]
+    return full_sym * full + m + style[0] * (size - full - 1)
+
 
 def teamComposition(match):
     if forsen in match.team1.players:
