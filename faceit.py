@@ -11,8 +11,12 @@ class match:
             'accept': 'application/json',
             'Authorization': "Bearer " + os.environ["server_api_key"],
         }
-
-        _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}', headers=headers)
+         
+        while True:
+            _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}', headers=headers)
+            if _response.status_code != 503: 
+                break
+        
         if _response.status_code != 200: 
             raise Exception(f"Bad match_id response, code {_response.status_code}")
         
@@ -43,9 +47,13 @@ class match:
         if _response["status"] == "FINISHED":
             self.finished = True
             self.finish_time = _response["finished_at"]
-            match_stats = _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}/stats', headers=headers)
+            while True:
+                match_stats = _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}/stats', headers=headers)
+                if _response.status_code != 503: 
+                    break
             if _response.status_code != 200: 
                 raise Exception(f"Bad match_id/stats response, code {match_stats.status_code}")
+
             match_stats = json.loads(match_stats.content)
             _scores = match_stats["rounds"][0]["round_stats"]["Score"].split(" / ")
             _scores = [int(score) for score in _scores]
@@ -96,9 +104,10 @@ class player:
             'accept': 'application/json',
             'Authorization': "Bearer " + os.environ["server_api_key"],
         }
-
-        _response = requests.get(f'https://open.faceit.com/data/v4/players/{player_id}', headers=headers)
-        
+        while True:
+            _response = requests.get(f'https://open.faceit.com/data/v4/players/{player_id}', headers=headers)
+            if _response.status_code != 503: 
+                break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id response, code {_response.status_code}")
         
@@ -118,9 +127,10 @@ class player:
             'accept': 'application/json',
             'Authorization': "Bearer " + os.environ["server_api_key"],
         }
-
-        _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}', headers=headers)
-        
+        while True:
+            _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}', headers=headers)
+            if _response.status_code != 503: 
+                break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id response, code {_response.status_code}")
         
@@ -151,8 +161,10 @@ class player:
             'offset': '0',
             'limit': str(match_count),
         }
-
-        _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}/history', params=params, headers=headers)
+        while True:
+            _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}/history', params=params, headers=headers)
+            if _response.status_code != 503:
+                break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id/history response, code {_response.status_code}")
         _response = json.loads(_response.content)
@@ -167,8 +179,10 @@ class player:
             'accept': 'application/json',
             'Authorization': "Bearer " + os.environ["server_api_key"],
         }
-
-        _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}/stats/csgo', headers=headers)
+        while True:
+            _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}/stats/csgo', headers=headers)
+            if _response.status_code != 503:
+                break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id/stats response, code {_response.status_code}")
         
