@@ -101,7 +101,7 @@
         <h4 class="card-title text-dark">{{forsen.nickname}}</h4>
         <h5 class="card-text text-dark">LVL {{forsen.level}} | ELO {{forsen.elo}}</h5>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{progress[0]}}"
+          <div class="progress-bar bg-success" role="progressbar" aria-valuenow="{{progress[0]}}"
           aria-valuemin="0" aria-valuemax="100" style="width:{{progress[0]}}%">
             {{progress[0]}}% | {{progress[2] - forsen.elo}} to level up | {{forsen.elo - progress[1]}} to level down
           </div>
