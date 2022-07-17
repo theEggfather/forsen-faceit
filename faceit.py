@@ -14,7 +14,7 @@ class match:
          
         while True:
             _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}', headers=headers)
-            if _response.status_code != 503: 
+            if _response.status_code < 500: 
                 break
         
         if _response.status_code != 200: 
@@ -49,7 +49,7 @@ class match:
             self.finish_time = _response["finished_at"]
             while True:
                 match_stats = _response = requests.get(f'https://open.faceit.com/data/v4/matches/{match_id}/stats', headers=headers)
-                if _response.status_code != 503: 
+                if _response.status_code < 500: 
                     break
             if _response.status_code != 200: 
                 raise Exception(f"Bad match_id/stats response, code {match_stats.status_code}")
@@ -106,7 +106,7 @@ class player:
         }
         while True:
             _response = requests.get(f'https://open.faceit.com/data/v4/players/{player_id}', headers=headers)
-            if _response.status_code != 503: 
+            if _response.status_code < 500: 
                 break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id response, code {_response.status_code}")
@@ -129,7 +129,7 @@ class player:
         }
         while True:
             _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}', headers=headers)
-            if _response.status_code != 503: 
+            if _response.status_code < 500: 
                 break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id response, code {_response.status_code}")
@@ -163,7 +163,7 @@ class player:
         }
         while True:
             _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}/history', params=params, headers=headers)
-            if _response.status_code != 503:
+            if _response.status_code < 500:
                 break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id/history response, code {_response.status_code}")
@@ -181,7 +181,7 @@ class player:
         }
         while True:
             _response = requests.get(f'https://open.faceit.com/data/v4/players/{self.player_id}/stats/csgo', headers=headers)
-            if _response.status_code != 503:
+            if _response.status_code < 500:
                 break
         if _response.status_code != 200: 
             raise Exception(f"Bad player_id/stats response, code {_response.status_code}")

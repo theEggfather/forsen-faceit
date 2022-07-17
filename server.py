@@ -1,3 +1,4 @@
+from pickle import encode_long
 from flask import Flask, render_template, request
 from forsan import playerStat, teamComposition, matchStats, mapStats, forsen
 from datetime import datetime, timedelta
@@ -64,7 +65,15 @@ def send_stat():
     global current_match, current_match_id, last_exec, rewards_distributed
     sem.acquire()
     if (datetime.now() - last_exec).total_seconds() > 5:
-        current_match = match(current_match_id)
+
+        for attempt in range(5):
+            try:
+                current_match = match(current_match_id)
+                break
+            except Exception as e:
+                print(f"Match update attempt {attempt} failed!")
+                print(str(e))
+
         last_exec = datetime.now() + timedelta(seconds = 10)
     sem.release()
     return({"match_id":current_match.match_id, "round":current_match.forsens_team.score + current_match.other_team.score + 1, "ft_s":current_match.forsens_team.score, "ot_s":current_match.other_team.score})
