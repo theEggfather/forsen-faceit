@@ -67,7 +67,7 @@ def teamComposition(match):
     out = f"/me forsenScoots TEAM COMPOSITION: forsenE lvl {forsen.level} "
     for member in forsens_team.players:
         if member != forsen:
-            if member.country not in ["ua", "ru"]:
+            if member.country not in []:
                 out += f", :flag-{member.country}: lvl {member.level}"
             else:
                 out += f", {member.country} lvl {member.level}"
